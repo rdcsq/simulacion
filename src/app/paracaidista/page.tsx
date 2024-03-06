@@ -2,7 +2,6 @@
 
 import "chart.js/auto";
 import ChartDataLabels from "chartjs-plugin-datalabels";
-import Head from "next/head";
 import { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 import { redondear } from "~/helpers/decimales";
@@ -50,9 +49,6 @@ export default function Paracaidista() {
 
   return (
     <>
-      <Head>
-        <title>Paracaidista</title>
-      </Head>
       <div className="flex flex-col-reverse md:flex-row max-w-6xl mx-auto my-0 justify-start">
         <div className="w-full md:w-48 flex flex-col gap-2">
           <div>
