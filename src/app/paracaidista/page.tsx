@@ -70,17 +70,21 @@ export default function Paracaidista() {
             />
           </div>
           {datos && (
-            <table className="w-full">
-              <tr className="bg-black/20">
-                <th>t</th>
-                <th>v</th>
-              </tr>
-              {datos.map((v) => (
-                <tr key={v.t} className="text-center bg-black/10">
-                  <td>{v.t}</td>
-                  <td>{v.v}</td>
+            <table className="w-full border">
+              <thead>
+                <tr className="bg-black/20">
+                  <th>t</th>
+                  <th>v</th>
                 </tr>
-              ))}
+              </thead>
+              <tbody>
+                {datos.map((v) => (
+                  <tr key={v.t} className="text-center even:bg-black/10">
+                    <td>{v.t}</td>
+                    <td>{v.v}</td>
+                  </tr>
+                ))}
+              </tbody>
             </table>
           )}
         </div>
