@@ -4,7 +4,7 @@ import "chart.js/auto";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
-import { redondear } from "~/helpers/decimales";
+import { round } from "~/helpers/decimals";
 
 // gravedad
 const g = 9.8;
@@ -18,34 +18,27 @@ function f(m: number, t: number) {
 }
 
 export default function Paracaidista() {
-  const [peso, setPeso] = useState(68.1);
-  const [intervalo, setIntervalo] = useState(2);
-  const [datos, setDatos] = useState<Fila[]>();
-
-  function actualizarIntervalo(v: any) {
-    let n = Number.parseFloat(v);
-    if (!Number.isNaN(n)) setIntervalo(n);
-  }
-
-  function actualizarPeso(v: any) {
-    let n = Number.parseFloat(v);
-    if (!Number.isNaN(n)) setPeso(n);
-  }
+  const [mass, setMass] = useState(68.1);
+  const [interval, setInterval] = useState(2);
+  const [data, setData] = useState<Fila[]>();
 
   useEffect(() => {
+    if (Number.isNaN(mass) || Number.isNaN(interval)) return;
+
     let t = 0,
-      v;
-    let arr: Fila[] = [{ t, v: f(peso, t) }];
+      v = round(f(mass, t), 2);
+
+    let arr: Fila[] = [{ t, v }];
 
     while (true) {
-      t += intervalo;
-      v = redondear(f(peso, t), 2);
+      t += interval;
+      v = round(f(mass, t), 2);
       if (v == arr[arr.length - 1].v) break;
       arr.push({ v, t });
     }
 
-    setDatos(arr);
-  }, [peso, intervalo]);
+    setData(arr);
+  }, [mass, interval]);
 
   return (
     <>
@@ -56,8 +49,8 @@ export default function Paracaidista() {
             <input
               type="number"
               className="border bg-black/10 p-1 w-12 text-center"
-              onChange={(e) => actualizarIntervalo(e.target.value)}
-              value={intervalo}
+              onChange={(e) => setInterval(Number.parseInt(e.target.value))}
+              value={interval}
             />
           </div>
           <div>
@@ -65,11 +58,11 @@ export default function Paracaidista() {
             <input
               type="number"
               className="border bg-black/10 p-1 w-16 text-center"
-              onChange={(e) => actualizarPeso(e.target.value)}
-              value={peso}
+              onChange={(e) => setMass(Number.parseFloat(e.target.value))}
+              value={mass}
             />
           </div>
-          {datos && (
+          {data && (
             <table className="w-full border">
               <thead>
                 <tr className="bg-black/20">
@@ -78,7 +71,7 @@ export default function Paracaidista() {
                 </tr>
               </thead>
               <tbody>
-                {datos.map((v) => (
+                {data.map((v) => (
                   <tr key={v.t} className="text-center even:bg-black/10">
                     <td>{v.t}</td>
                     <td>{v.v}</td>
@@ -88,8 +81,8 @@ export default function Paracaidista() {
             </table>
           )}
         </div>
-        <div className="flex flex-grow w-full">
-          {datos && (
+        <div className="flex flex-grow w-full relative">
+          {data && (
             <Line
               plugins={[ChartDataLabels]}
               options={{
@@ -99,13 +92,20 @@ export default function Paracaidista() {
                   },
                 },
                 responsive: true,
+                scales: {
+                  y: {
+                    ticks: {
+                      stepSize: 5,
+                    },
+                  },
+                },
               }}
               data={{
-                labels: datos.map((v) => v.t),
+                labels: data.map((v) => v.t),
                 datasets: [
                   {
                     label: "Velocidad",
-                    data: datos.map((v) => v.v),
+                    data: data.map((v) => v.v),
                     fill: false,
                     borderColor: "rgb(75, 192, 192)",
                     tension: 0.1,
