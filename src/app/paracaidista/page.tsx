@@ -18,6 +18,7 @@ function f(m: number, t: number) {
 }
 
 export default function Paracaidista() {
+  const [decimals, setDecimals] = useState(15);
   const [mass, setMass] = useState(68.1);
   const [interval, setInterval] = useState(2);
   const [data, setData] = useState<Fila[]>();
@@ -26,19 +27,19 @@ export default function Paracaidista() {
     if (Number.isNaN(mass) || Number.isNaN(interval)) return;
 
     let t = 0,
-      v = round(f(mass, t), 2);
+      v = round(f(mass, t), decimals);
 
     let arr: Fila[] = [{ t, v }];
 
     while (true) {
       t += interval;
-      v = round(f(mass, t), 2);
+      v = round(f(mass, t), decimals);
       if (v == arr[arr.length - 1].v) break;
       arr.push({ v, t });
     }
 
     setData(arr);
-  }, [mass, interval]);
+  }, [mass, interval, decimals]);
 
   return (
     <>
@@ -60,6 +61,15 @@ export default function Paracaidista() {
               className="border bg-black/10 p-1 w-16 text-center"
               onChange={(e) => setMass(Number.parseFloat(e.target.value))}
               value={mass}
+            />
+          </div>
+          <div>
+            <span>Decimales: </span>
+            <input
+              type="number"
+              className="border bg-black/10 p-1 w-16 text-center"
+              onChange={(e) => setDecimals(Number.parseInt(e.target.value))}
+              value={decimals}
             />
           </div>
           {data && (
@@ -106,8 +116,8 @@ export default function Paracaidista() {
                   {
                     label: "Velocidad",
                     data: data.map((v) => v.v),
-                    fill: false,
-                    borderColor: "rgb(75, 192, 192)",
+                    fill: true,
+                    borderColor: "purple",
                     tension: 0.1,
                   },
                 ],
