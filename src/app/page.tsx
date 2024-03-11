@@ -5,6 +5,7 @@ export default function Page() {
     <>
       <p>Simulación</p>
       <Link href="/paracaidista">Paracaidista</Link>
+      <Link href="/generador-de-numeros">Generador de números</Link>
     </>
   );
 }
