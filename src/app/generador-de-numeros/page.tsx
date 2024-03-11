@@ -1,27 +1,35 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { randomNumber } from "~/helpers/random-number";
 
 export default function Page() {
-  const [numbers, setNumbers] = useState(randomNumber(1, 1000).toString());
+  const [numbers, setNumbers] = useState("");
   const [numbersList, setNumbersList] = useState<number[]>([]);
 
   function automaticMode() {
-    setNumbers(randomNumber(1, 1000).toString());
-    generate();
+    const n = randomNumber(1, 1000);
+    setNumbers(n.toString());
+    generate(n);
   }
 
-  function generate() {
+  function run() {
     const n = Number.parseInt(numbers);
     if (Number.isNaN(n)) return;
+    generate(n);
+  }
 
+  function generate(n: number) {
     let a: number[] = [];
     for (let i = 0; i < n; i++) {
       a[i] = Math.random();
     }
     setNumbersList(a);
   }
+
+  useEffect(() => {
+    automaticMode();
+  }, []);
 
   return (
     <div className="mx-auto my-0 max-w-xl">
@@ -40,7 +48,7 @@ export default function Page() {
         </button>
         <button
           className="bg-purple-500 text-white border rounded-lg px-4 py-2"
-          onClick={generate}
+          onClick={run}
         >
           Generar
         </button>
