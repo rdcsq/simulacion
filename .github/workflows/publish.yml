@@ -29,12 +29,12 @@ jobs:
         run: pnpm install
 
       - name: build
-        run: pnpm build
+        run: pnpm generate
 
       - name: upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./out
+          path: ./.output/public
 
   deploy:
     environment:
